@@ -46,3 +46,29 @@ func (client *Client) read() {
     }
 }
 
+// Write - takes messages from outbound channel and sents to client
+func (client *Client) write() {
+    for {
+        select {
+        case data, ok := <-client.outbound:
+            if !ok {
+                client.socket.WriteMessage(websocket.CloseMessage, []byte{})
+                return
+            }
+
+            client.socket.WriteMessage(websocket.TextMessage, data)
+        }
+    }
+}
+
+// Start and end processing of client as goroutines
+func (client Client) run() {
+    go client.read()
+    go client.write()
+}
+
+func (client Client) close() {
+    client.socket.close()
+    close(client.outbound)
+}
+
