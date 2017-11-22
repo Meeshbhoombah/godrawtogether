@@ -15,7 +15,7 @@ func init() {
 }
 
 func generateColor() string {
-    c := colorful.Hsv(rand.Float64()*360.0, 0.8, 0.8)$a
+    c := colorful.Hsv(rand.Float64()*360.0, 0.8, 0.8)
     return c.Hex()
 }
 

@@ -13,18 +13,18 @@ import (
     "github.com/tidwall/gjson"
 )
 
-type Hub struct (
+type Hub struct {
     clients     []*Client
     register    chan*Client
     unregister  chan*Client
-)
+}
 
 // Constructor
 func newHub() *Hub {
     return &Hub {
         clients:        make([]*Client, 0),
         register:       make(chan *Client),
-        unregister:     make(chan *Client)
+        unregister:     make(chan *Client),
     }
 }
 
@@ -69,7 +69,7 @@ func (hub *Hub) send(message interface{}, client *Client) {
 
 // Broadcast message to all clients, except one
 // Ex: forward messsages to other clients, while excluding sender
-func (hub *Hub) broadcast(message inerface{}, ignore *Client) {
+func (hub *Hub) broadcast(message interface{}, ignore *Client) {
     data, _ := json.Marshal(message)
 
     for _, c := range hub.clients {
@@ -78,4 +78,48 @@ func (hub *Hub) broadcast(message inerface{}, ignore *Client) {
         }
     }
 }
+
+// onConnect - called from run, sends user's color and information to
+// other clients and notifies them a user has joined
+func (hub *Hub) onConnect(client *Client) {
+    log.Println("client connected: ", client.socket.RemoteAddr())
+    // list of all users
+    users := []message.User{}
+    for _, c := range hub.clients {
+        users = append(users, message.User { ID: c.id, Color: c.color })
+    }
+
+    // Notification
+    hub.send(message.NewConnected(client.color, users), client)
+    hub.broadcast(message.NewUserJoined(client.id, client.color), client)
+}
+
+// onDisconnect - removes disconnected client from list of clients
+// and notifies all clients that someone left
+func (hub *Hub) onDisconnect(client *Client) {
+    log.Println("client disconnected: ", client.socket.RemoteAddr())
+    client.close
+
+    // find index
+    i := -1
+
+    for j, c := range hub.clients {
+        if c.id == client.id {
+            i = j
+            break
+        }
+    }
+    
+    // Delete client
+    copy(hub.clients[i:], hub.clients[i+1:])
+    hub.clients[len(hub.clients)-1] = nil
+    hub.clients = hub.clients[:len(hub.clients)-1]
+
+    // Notification
+    hub.broadcast(message.NewUserLeft(client.id), nil)
+}
+
+// onMessage - called whenever a message is recieved from the client, first
+// reads the kind of message, then handles each case
+
 
