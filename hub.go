@@ -121,5 +121,28 @@ func (hub *Hub) onDisconnect(client *Client) {
 
 // onMessage - called whenever a message is recieved from the client, first
 // reads the kind of message, then handles each case
+func (hub *Hub) onMessage(data []byte, client *Client) {
+    kind := gjson.GetBytes(data, "kind").Int()
+
+    if kind == message.KindStroke {
+        var msg message.Stroke
+
+        if json.Unmarshal(data, &msg) != nil {
+            return
+        }
+
+        msg.UserID = client.id
+        hub.broadcast(msg, client)
+    } else if kind == message.KindClear {
+        var msg message.Clear
+
+        if json.Unmarshal(data, &msg) != nil {
+            return
+        }
+    }
+
+    msg.UserID = client.id
+    hub.broadcast(msg, client)
+}
 
 
