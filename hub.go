@@ -79,5 +79,3 @@ func (hub *Hub) broadcast(message inerface{}, ignore *Client) {
     }
 }
 
-
-
