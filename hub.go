@@ -5,12 +5,12 @@ hub.go
 package main
 
 import (
-    'encoding/json'
-    'log'
-    'net/http'
+    "encoding/json"
+    "log"
+    "net/http"
 
-    'github.com/gorilla/websocket'
-    'github.com/tidwall/gjson'
+    "github.com/gorilla/websocket"
+    "github.com/tidwall/gjson"
 )
 
 type Hub struct (
@@ -51,7 +51,7 @@ func (hub *Hub) handleWebSocket(w http.Responsewriter, r *http.Request) {
     socket, err := upgrader.Upgrade(w, r, nil)
     if err != nil {
         log.Println(err)
-        http.Error(w, 'could not upgrade', http.StatusInternalServerError)
+        http.Error(w, "could not upgrade", http.StatusInternalServerError)
         return
     }
 

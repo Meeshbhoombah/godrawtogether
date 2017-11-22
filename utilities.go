@@ -2,10 +2,12 @@
 utilities.go
 */
 
+package main
+
 import (
-    'math/rand'
-    'time'
-    colorful 'github.com/lucasb-eyer/go-colorful'
+    "math/rand"
+    "time"
+    colorful "github.com/lucasb-eyer/go-colorful"
 )
 
 func init() {

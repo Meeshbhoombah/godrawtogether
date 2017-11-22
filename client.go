@@ -5,8 +5,8 @@ client.go
 package main
 
 import (
-    'github.com/gorilla/websocket'
-    uuid 'github.com/satori/go.uuid'
+    "github.com/gorilla/websocket"
+    uuid "github.com/satori/go.uuid"
 )
 
 type Client struct {
@@ -20,7 +20,7 @@ type Client struct {
 // Constructor - assigns UUID and random color
 func newClient(hub *Hub, socket *websocket.Conn) *Client {
     return &Client {
-        id:      uuid.NewV4().String().
+        id:      uuid.NewV4().String(),
         color:   generateColor(),
         hub:     hub,
         socket:  socket,
