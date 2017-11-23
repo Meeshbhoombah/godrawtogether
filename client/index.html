@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Collaborative Drawing App</title>
+        <style>
+            #canvas {
+                border: 1px solid #000;
+            }
+        </style>
+    </head>
+    <body>
+        <canvas id="canvas"
+                width="480"
+                height="360">
+        </canvas>
+        <div>
+            <button id="clearButton">Clear</button>
+        </div>
+        <script>
+            MESSAGE_CONNECTED = 1;
+            MESSAGE_USER_JOINED = 2;
+            MESSAGE_USER_LEFT = 3;
+            MESSAGE_STROKE = 4;
+            MESSAGE_CLEAR = 5;
+
+            window.onload = function () {}
+        </script>
+    </body>
+</html>

@@ -24,7 +24,7 @@ func newClient(hub *Hub, socket *websocket.Conn) *Client {
         color:   generateColor(),
         hub:     hub,
         socket:  socket,
-        outboud: make(chan []byte),
+        outbound: make(chan []byte),
     }
 }
 
@@ -32,7 +32,7 @@ func newClient(hub *Hub, socket *websocket.Conn) *Client {
 // if error or disconnet, unregister client
 func (client *Client) read() {
     defer func() {
-        client.hud.unregister <- client 
+        client.hub.unregister <- client 
     }()
 
     for {
@@ -68,7 +68,7 @@ func (client Client) run() {
 }
 
 func (client Client) close() {
-    client.socket.close()
+    client.socket.Close()
     close(client.outbound)
 }
 

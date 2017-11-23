@@ -109,7 +109,7 @@ func (hub *Hub) onDisconnect(client *Client) {
             break
         }
     }
-    
+ 
     // Delete client
     copy(hub.clients[i:], hub.clients[i+1:])
     hub.clients[len(hub.clients)-1] = nil
